@@ -1,0 +1,8 @@
+Datum: 30.10.2025
+Autoren: Dominik Voss, Ahmet Özcan
+Python : 3.11.0
+Plattform: Windows-10-10.0.26100-SP0
+NumPy   : 2.3.4
+SciPy   : 1.16.2
+pandas  : 2.3.3
+mpl     : 3.10.7
