@@ -2,149 +2,116 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# NOCHMAL ANSCHAUEN UND VERSTEHEN, WAS HIER PASSIERT
-# expected_packs wird nicht explizit ausgegeben
-def coupon_collector_expected(total_cards, cards_per_pack):
-    """
-    Analytische Berechnung der erwarteten Packs (Coupon Collector).
-    
-    Parameters
-    ----------
-    total_cards : int
-        Gesamtanzahl unterschiedlicher Goldkarten.
-    cards_per_pack : int
-        Anzahl Goldkarten pro Pack.
-    
-    Returns
-    -------
-    expected_packs : float
-        Erwartete Anzahl Packs.
-    """
-    expected_draws = total_cards * np.log(total_cards)
-    expected_packs = expected_draws / cards_per_pack
-    return expected_packs
 
-# Plotten der Ergebnisse
-def plot_simulation_results(df, output_path='simtools/reports/figures/simulation_vs_theory.png'):
+def plot_simulation_results(df, output_path="simtools/reports/figures/simulation_results.png"):
     """
-    Erstellt Plot mit Simulationsergebnissen und theoretischen Werten.
-    
+    Create a plot with simulation results (mean and 95% CI).
+
     Parameters
     ----------
-    df : pd.DataFrame
-        Ergebnisse aus run_experiment.
+    df : pandas.DataFrame
+        Results from run_experiment (columns: total_cards, mu, ci_lower, ci_upper).
     output_path : str
-        Pfad zum Speichern des Plots.
+        Path where the plot is saved.
     """
-    # Theoretische Werte berechnen (mit Formel von oben)
-    df['theory'] = df.apply(
-        lambda row: coupon_collector_expected(row['total_cards'], row['cards_per_pack']),
-        axis=1
-    )
-    
-    # Plot erstellen
     plt.figure(figsize=(10, 6))
 
-    # Simulation mit Fehlerbalken (yerr = y-error)
+    # Asymmetric error bars from confidence intervals
     yerr = np.vstack([
-    df['mu'].to_numpy() - df['ki_untere_grenze'].to_numpy(),
-    df['ki_obere_grenze'].to_numpy() - df['mu'].to_numpy()
-])
+        df["mu"].to_numpy() - df["ci_lower"].to_numpy(),
+        df["ci_upper"].to_numpy() - df["mu"].to_numpy(),
+    ])
 
     plt.errorbar(
-        df['total_cards'],
-        df['mu'],
+        df["total_cards"],
+        df["mu"],
         yerr=yerr,
-        fmt='o',
-        label='Simulation (95% CI)',
-        capsize=5
+        fmt="o",
+        label="Simulation (95% CI)",
+        capsize=5,
     )
-    
-    # Theoretische Kurve
-    plt.plot(df['total_cards'], df['theory'], 'r--', label='Theorie (Coupon Collector)')
-    
-    plt.xlabel('Anzahl Goldkarten')
-    plt.ylabel('Erwartete Anzahl Packs')
-    plt.title('Simulation vs. Theorie: Packs bis zur Komplettierung')
+
+    plt.xlabel("Number of gold cards")
+    plt.ylabel("Expected number of packs")
+    plt.title("Simulation: packs needed to complete the collection")
     plt.legend()
     plt.grid(True, alpha=0.3)
-    plt.savefig(output_path, dpi=300, bbox_inches='tight')
+    plt.savefig(output_path, dpi=300, bbox_inches="tight")
     plt.close()
-    
-    print(f"Plot gespeichert unter: {output_path}")
+
+    print(f"Plot saved to: {output_path}")
 
 
-def plot_histogram(results, total_cards, output_path='simtools/reports/figures/histogram.png'):
+def plot_histogram(results, total_cards, output_path="simtools/reports/figures/histogram.png"):
     """
-    Erstellt Histogramm der Simulationsergebnisse.
-    
+    Create a histogram of simulation results.
+
     Parameters
     ----------
     results : np.ndarray
-        Array mit Anzahl Packs pro Replikation.
+        Array of pack counts per replication.
     total_cards : int
-        Anzahl der Goldkarten für Titel.
+        Number of gold cards, used in the plot title.
     output_path : str
-        Pfad zum Speichern des Plots.
+        Path where the plot is saved.
     """
     plt.figure(figsize=(10, 6))
-    plt.hist(results, bins=30, color='skyblue', edgecolor='black', alpha=0.7)
-    plt.axvline(np.mean(results), color='red', linestyle='--', linewidth=2, label=f'Mittelwert: {np.mean(results):.1f}')
-    plt.xlabel('Anzahl geöffneter Packs')
-    plt.ylabel('Häufigkeit')
-    plt.title(f'Verteilung der benötigten Packs ({total_cards} Karten)')
+    plt.hist(results, bins=30, color="skyblue", edgecolor="black", alpha=0.7)
+    mean_val = np.mean(results)
+    plt.axvline(mean_val, color="red", linestyle="--", linewidth=2,
+                label=f"Mean: {mean_val:.1f}")
+    plt.xlabel("Number of packs opened")
+    plt.ylabel("Frequency")
+    plt.title(f"Distribution of packs needed ({total_cards} cards)")
     plt.legend()
     plt.grid(True, alpha=0.3)
-    plt.savefig(output_path, dpi=300, bbox_inches='tight')
+    plt.savefig(output_path, dpi=300, bbox_inches="tight")
     plt.close()
-    
-    print(f"Histogramm gespeichert unter: {output_path}")
 
+    print(f"Histogram saved to: {output_path}")
 
-if __name__ == '__main__':
-    # Ergebnisse laden
-    df = pd.read_csv('simtools/reports/simulation_results.csv')
-    
-    # Plot erstellen
-    plot_simulation_results(df)
-    
-    print("\nErgebnistabelle:")
-    print(df.to_string(index=False))
-
-# Kosten für alle Karten
-
-# Ergebnisse aus der Simulation laden
-df = pd.read_csv("simtools/reports/simulation_results.csv")
-
-# Zeile für 1900 Karten auswählen
-row_1900 = df.loc[df["total_cards"] == 1900].iloc[0]
-
-expected_packs = row_1900["mu"]   # Mittelwert über alle Replikationen
 
 def calculate_total_cost(expected_packs, pack_price):
     """
-    Berechnet die Gesamtkosten für das Sammeln aller Karten.
-    
+    Calculate the total cost to collect all cards.
+
     Parameters
     ----------
-    total_cards : int
-        Gesamtanzahl unterschiedlicher Goldkarten.
-    cards_per_pack : int
-        Anzahl Goldkarten pro Pack.
-    pack_price : float
-        Preis pro Pack.
     expected_packs : float
-        Erwartete Anzahl Packs.
-    
+        Expected number of packs (e.g. mean from simulation).
+    pack_price : float
+        Price per pack (e.g. 7500 coins or 1.25 €).
+
     Returns
     -------
     total_cost : float
-        Gesamtkosten für das Sammeln aller Karten.
+        Total cost to collect all cards.
     """
     total_cost = expected_packs * pack_price
     return total_cost
 
-coins_kosten = calculate_total_cost (expected_packs, pack_price=7500)
-points_kosten = calculate_total_cost (expected_packs, pack_price=1.25)
 
-print(f'Gesamtkosten für das Sammeln aller Karten: {coins_kosten:.2f} Coins oder {points_kosten:.2f} € für Points')
+if __name__ == "__main__":
+    # Load simulation results
+    df = pd.read_csv("simtools/reports/simulation_results.csv")
+
+    # Create plot of simulation results
+    plot_simulation_results(df)
+
+    print("\nResult table:")
+    print(df.to_string(index=False))
+
+    # Select row for 1900 cards
+    row_1900 = df.loc[df["total_cards"] == 1900].iloc[0]
+
+    # Expected packs = mean over all replications for 1900 cards
+    expected_packs = row_1900["mu"]
+
+    # Costs in coins and points
+    coins_cost = calculate_total_cost(expected_packs, pack_price=7500)   # one pack costs 7500 coins
+    points_cost = calculate_total_cost(expected_packs, pack_price=1.25)  # one pack costs 1.25 €
+
+    print(
+        f"Total cost to collect all cards: "
+        f"{coins_cost:.2f} coins or {points_cost:.2f} € in points"
+    )
