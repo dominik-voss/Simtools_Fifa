@@ -11,7 +11,7 @@ def build_rating_probs(ratings):
     Parameters
     ----------
     ratings : array_like of int, shape (n_cards,)
-        Player ratings (e.g. integers 75–90).
+        Player ratings (e.g. integers 75–91).
 
     Returns
     -------
@@ -48,7 +48,7 @@ def build_rating_probs(ratings):
     n_high = high_rated_cards.sum()
     if n_high > 0:
         # Example: weight ~ 1 / (rating - 80),
-        # so 90s are rarer than 86s (1 / 10 vs. 1 / 6)
+        # so 91s are rarer than 86s (1 / 11 vs. 1 / 6)
         raw_w = 1.0 / (high_ratings - 80)
         raw_w = raw_w / raw_w.sum()           # normalize within high class
         probs[high_rated_cards] = p_high_total * raw_w
