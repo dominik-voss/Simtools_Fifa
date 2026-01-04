@@ -197,7 +197,7 @@ if __name__ == "__main__":
     # Experiment parameters
     CARD_COUNTS = (50, 100, 200, 500, 1000, 1900)
     CARDS_PER_PACK = 3
-    N_REPLICATIONS = 100
+    N_REPLICATIONS = 500
     SEED = 42
 
     # Seed sequence for reproducibility
@@ -212,5 +212,5 @@ if __name__ == "__main__":
     )
 
     # Save results
-    results_df.to_csv("simtools/reports/simulation_results.csv", index=False)
+    results_df.to_csv("reports/simulation_results.csv", index=False)
     print(results_df)
