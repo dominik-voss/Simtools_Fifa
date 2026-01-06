@@ -4,36 +4,24 @@
     <img src="https://img.shields.io/badge/CCDS-Project%20template-328F97?logo=cookiecutter" />
 </a>
 
-This project analyzes how many packs and coins are needed to complete a collection of gold cards in FIFA 26 using Monte Carlo simulation.
+This project uses Monte Carlo simulation to study the Coupon Collector’s problem in the context of FIFA Ultimate Team pack openings. It estimates how many premium gold packs, coins, and real money are needed to collect all gold cards, under realistic but simplified drop probabilities derived from EA’s disclosed odds and rating distributions. The simulation models different collection stages (e.g. 50, 200, 500, 1900 cards), computes sample means, standard errors, and 95% confidence intervals for the required number of packs, and visualizes how the effort grows over the collection progress. The results show that completing the full gold card set requires tens of thousands of packs and an amount of time or money that is practically unattainable for normal players, highlighting the quasi-gambling character of the lootbox system.
 
 ## Project Organization
 
 ```
 project/
-├── configs/              # yaml/json for seeds and global parameters (optional)
-│
-├── data/                 # reserved for datasets (not strictly needed yet)
-│   ├── raw/              # original, read-only inputs
-│   ├── interim/          # cleaned / transformed data
-│   └── processed/        # final data used for analysis
-│
-├── figures/              # additional png/pdf plots outside of reports (optional)
-│
-├── notebooks/            # exploration & demos (e.g. Jupyter notebooks)
+├── notebooks/            # exploration & demos (Jupyter notebook)
 │   └── fifa_packs.ipynb  # main notebook for the pack-opening project
 │
 ├── reports/              # tables, short text outputs, generated reports
 │   └── figures/          # plots used in the report
-│       ├── packs_vs_cards.png
-│       └── coins_vs_cards.png
+│       ├── packs_vs_cards.png # plotted number of packs that are needed
+│       └── coins_vs_cards.png # plotted number of coins that are needed
     └── ABOUT.txt         # Short project description (authors, course, requirements)
 │
 ├── src/                  # core functions / models
-│   ├── __init__.py
 │   ├── simulation.py # Monte Carlo pack-opening
     ├── plots_packs_coins.py # plot results       
-│
-├── tests/                # optional unit tests for simulation and plotting code
 │
 ├── requirements.txt      # Python dependencies to reproduce the environment
 └── README.md             # high-level project description, setup and usage instructions
