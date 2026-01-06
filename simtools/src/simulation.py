@@ -97,7 +97,7 @@ def simulate_pack(total_cards, cards_per_pack, rng, probs):
 
     return packs_opened
 
-
+# Monte Carlo replications
 def mc_pack_opening(total_cards, cards_per_pack, n_replications, rsseq, probs):
     """
     Run multiple independent replications of the pack-opening simulation.
@@ -131,7 +131,7 @@ def mc_pack_opening(total_cards, cards_per_pack, n_replications, rsseq, probs):
 
     return np.array(results)
 
-
+# Experiment runner
 def run_experiment(card_counts, cards_per_pack, n_replications, rsseq):
     """
     Run experiments for several different numbers of total cards.
