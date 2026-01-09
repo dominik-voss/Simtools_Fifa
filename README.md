@@ -6,6 +6,12 @@
 
 This project uses Monte Carlo simulation to study the Coupon Collector’s problem in the context of FIFA Ultimate Team pack openings. It estimates how many premium gold packs, coins, and real money are needed to collect all gold cards, under realistic but simplified drop probabilities derived from EA’s disclosed odds and rating distributions. The simulation models different collection stages (e.g. 50, 200, 500, 1900 cards), computes sample means, standard errors, and 95% confidence intervals for the required number of packs, and visualizes how the effort grows over the collection progress. The results show that completing the full gold card set requires tens of thousands of packs and an amount of time or money that is practically unattainable for normal players, highlighting the quasi-gambling character of the lootbox system.
 
+## Reproducibility
+The simulation environment and all library versions are documented in ABOUT.txt, including Python version, operating system, and core dependencies (NumPy, SciPy, pandas, Matplotlib).
+​
+This setup ensures that the simulation can be rerun with identical software versions across different systems, making all reported results reproducible as long as the same code and configuration from ABOUT.txt are used.
+
+
 ## Project Organization
 
 ```
